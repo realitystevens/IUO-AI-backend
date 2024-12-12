@@ -5,6 +5,9 @@ from decouple import config
 import google.generativeai as genai
 
 
+
+
+
 class IUOAIproject:
     def __init__(self):
         """ Configure Gemini AI API """
@@ -172,46 +175,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# tokenizers = {
-#     "GPT-3": 1.4,    # OpenAI's model
-#     "BERT": 1.2,     # Google's BERT
-#     "Gemini": 1.3,   # Google's Gemini
-#     "Claude": 1.25   # Anthropic's model
-# }
-
-
-# def chunkText(text, max_token=8000):
-#     """
-#     Split long text into chunks that fits within Gemini's token limits
-
-#     Args:
-#         text (str): user_input text to chunk
-#         max_tokens (str): Maximum token per chunks
-#     """
-#     words = text.split()
-#     chunks = []
-#     current_chunk = []
-#     current_length = 0
-
-#     for word in words:
-#         # Rough token estimation (1 word ≈ 1.3 tokens)
-#         word_token = len(word) * tokenizers["Gemini"]
-
-#         if current_length + word_token > max_token:
-#             chunks.append(" ".join(current_chunk))
-#             current_chunk = []
-#             current_length = 0
-
-#         current_chunk.append(word)
-#         current_length += word_token
-
-#         if current_chunk:
-#             chunks.append(" ".join(current_chunk))
-
-#     return chunks
-
-
-# print("Extracting text from PDF file...", extractText("IUO_prospectus_2016-2020.pdf"))
-# print("Chunking the file...", chunkText(extractText("IUO_prospectus_2016-2020.pdf")))
