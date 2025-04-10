@@ -6,12 +6,14 @@
 """
 import os
 import PyPDF2
+import nltk
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 
-import nltk
-nltk.download('punkt_tab')
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PDF_PATH = os.path.join(BASE_DIR, "IUO_prospectus_2016-2020.pdf")
 
 
 def extractPDFtext(pdfPath):
@@ -34,6 +36,12 @@ def extractPDFtext(pdfPath):
 
 
 def summarize(text, num_sentences=200):
+    # Check if the nltk punkt tokenizer is already downloaded
+    try:
+        nltk.data.find("tokenizers/punkt")
+    except LookupError:
+        nltk.download("punkt")
+
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
     summarizer = LsaSummarizer()
     summary = summarizer(parser.document, num_sentences)
@@ -42,9 +50,6 @@ def summarize(text, num_sentences=200):
     return " ".join(str(sentence) for sentence in summary)
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PDF_PATH = os.path.join(BASE_DIR, "IUO_prospectus_2016-2020.pdf")
-
 if not os.path.exists(PDF_PATH):
     print(f"PDF file not found: {PDF_PATH}")
     exit(1)
@@ -52,7 +57,8 @@ if not os.path.exists(PDF_PATH):
 text = extractPDFtext(PDF_PATH)
 summarized_text = summarize(text, num_sentences=50)
 
-output_filepath = os.path.join(BASE_DIR, "..", "summarized_IUO_prospectus_2016-2020.txt")
+output_filepath = os.path.join(
+    BASE_DIR, "..", "summarized_IUO_prospectus_2016-2020.txt")
 
 with open(output_filepath, "w") as file:
     file.write(summarized_text)

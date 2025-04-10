@@ -10,9 +10,8 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 load_dotenv()
 
-import nltk
-nltk.download('punkt_tab')
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class IUOAIproject:
     def __init__(self):
@@ -27,6 +26,11 @@ class IUOAIproject:
             sys.exit(1)
 
     def extractText(self, filePath):
+        """ Extract text from the summarized TXT file """
+        if not os.path.exists(filePath):
+            return "File to be extracted not found"
+
+        """ Read the text from the file """
         try:
             with open(filePath, "r", encoding="utf-8") as file:
                 text = file.read()
@@ -36,7 +40,13 @@ class IUOAIproject:
 
 
     def askQuestion(self, question):
-        self.fileText = self.extractText("summarized_IUO_prospectus_2016-2020.txt")
+        """ Ask question to the model """
+        self.summarized_txt = os.path.join(os.path.dirname(BASE_DIR), 'summarized_IUO_prospectus_2016-2020.txt')
+        if not os.path.exists(self.summarized_txt):
+            return "Summarized TXT file not found"
+
+        """ Extract text from the summarized TXT file """
+        self.fileText = self.extractText(self.summarized_txt)
         if not self.fileText:
             return "Failed to extract text from TXT file"
 
