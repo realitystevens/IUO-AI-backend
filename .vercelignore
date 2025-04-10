@@ -1,0 +1,7 @@
+# Exclude unnecessary files and directories
+*.log
+*.pyc
+__pycache__/
+node_modules/
+venv/
+.env
