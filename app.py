@@ -37,7 +37,7 @@ class MessageSchema(BaseModel):
 
 
 
-@app.post("/api/v1/")
+@app.post("/api/v1/", tags=["AI"])
 async def ask_AI(message: MessageSchema):
     """
     Handles AI-based question answering by reading a document, processing the question, 
