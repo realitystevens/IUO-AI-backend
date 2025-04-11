@@ -25,7 +25,7 @@ app = FastAPI(
     },
     docs_url = "/docs",
     redoc_url = "/docs/v2",
-    root_path = "/api/v1",
+    root_path = "/",
     root_path_in_servers = True,
 )
 
