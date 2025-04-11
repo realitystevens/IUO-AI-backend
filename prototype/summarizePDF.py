@@ -6,10 +6,8 @@
 """
 import os
 import PyPDF2
-import nltk
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
+import spacy
+import spacytextrank
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,8 +25,7 @@ def extractPDFtext(pdfPath):
                 if pageText:
                     text += "\n\n" + pageText
 
-        word_count = len(text.split())
-        print(f"Text extracted successfully. Word count: {word_count}")
+        print(f"Text extracted successfully. Word count: {len(text.split())}")
         return text
     except Exception as e:
         print(f"Error extracting text from PDF: {e}")
@@ -36,18 +33,20 @@ def extractPDFtext(pdfPath):
 
 
 def summarize(text, num_sentences=200):
-    # Check if the nltk punkt tokenizer is already downloaded
-    try:
-        nltk.data.find("tokenizers/punkt")
-    except LookupError:
-        nltk.download("punkt")
+    nlp = spacy.load("en_core_web_sm")
+    nlp.add_pipe("textrank")
 
-    parser = PlaintextParser.from_string(text, Tokenizer("english"))
-    summarizer = LsaSummarizer()
-    summary = summarizer(parser.document, num_sentences)
-    print(f"Summarized text to {num_sentences} sentences")
+    doc = nlp(text)
+    summarized_text = "\n".join(
+        [str(sent) for sent in doc._.textrank.summary(limit_sentences=num_sentences)])
+    
+    print(f"""
+        Summarized text successfully.
+        Sentence count: {len(summarized_text.split('.'))}
+        Word count: {len(summarized_text.split())}
+    """)
 
-    return " ".join(str(sentence) for sentence in summary)
+    return summarized_text
 
 
 if not os.path.exists(PDF_PATH):
